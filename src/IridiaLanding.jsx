@@ -210,20 +210,31 @@ function FloatingCircles({ count = 12, className = "" }) {
 }
 
 // ─── Animated gradient blob (SVG, no deps) ──────────────────
-function GradientBlob({ className }) {
+// ─── Nebula — soft gaseous cloud ─────────────────────────────
+let nebulaIdCounter = 0;
+function Nebula({ className, color1 = C.indigo, color2 = C.lightBlue, opacity1 = 0.15, opacity2 = 0.04 }) {
+  const id = useRef(`neb${nebulaIdCounter++}`).current;
   return (
     <svg
       viewBox="0 0 600 600"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
+      style={{ filter: "blur(60px)" }}
     >
       <defs>
-        <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={C.indigo} stopOpacity="0.20" />
-          <stop offset="100%" stopColor={C.lightBlue} stopOpacity="0.06" />
-        </linearGradient>
+        <radialGradient id={`${id}g`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={color1} stopOpacity={opacity1} />
+          <stop offset="40%" stopColor={color2} stopOpacity={opacity1 * 0.5} />
+          <stop offset="70%" stopColor={color1} stopOpacity={opacity2} />
+          <stop offset="100%" stopColor={color2} stopOpacity="0" />
+        </radialGradient>
+        <filter id={`${id}t`}>
+          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed={Math.floor(Math.random() * 100)} />
+          <feDisplacementMap in="SourceGraphic" scale="80" />
+        </filter>
       </defs>
-      <circle cx="300" cy="300" r="260" fill="url(#blobGrad)" />
+      <ellipse cx="300" cy="300" rx="280" ry="240" fill={`url(#${id}g)`} filter={`url(#${id}t)`} />
+      <ellipse cx="320" cy="280" rx="200" ry="180" fill={`url(#${id}g)`} opacity="0.5" />
     </svg>
   );
 }
@@ -417,8 +428,8 @@ function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
       <Starfield />
-      <GradientBlob className="absolute w-[900px] h-[900px] -top-48 -right-48 opacity-60 pointer-events-none" />
-      <GradientBlob className="absolute w-[600px] h-[600px] -bottom-32 -left-32 opacity-40 pointer-events-none" />
+      <Nebula className="absolute w-[1100px] h-[1100px] -top-64 -right-64 opacity-70 pointer-events-none" color1={C.indigo} color2={C.blue} opacity1={0.12} opacity2={0.03} />
+      <Nebula className="absolute w-[800px] h-[800px] -bottom-48 -left-48 opacity-50 pointer-events-none" color1={C.accent} color2={C.lightBlue} opacity1={0.10} opacity2={0.02} />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         {/* Logo */}
