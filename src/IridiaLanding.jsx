@@ -83,9 +83,9 @@ function Hero() {
         {/* Logo */}
         <FadeSection>
           <img
-            src="/logo-iridia.jpeg"
+            src="/logo-iridia.png"
             alt="Iridia"
-            className="h-16 sm:h-20 mx-auto mb-8 object-contain"
+            className="h-14 sm:h-16 md:h-20 w-auto mx-auto mb-8"
           />
         </FadeSection>
 
