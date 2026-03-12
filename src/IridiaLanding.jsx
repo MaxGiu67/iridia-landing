@@ -72,10 +72,142 @@ function FadeSection({ children, className = "", delay = 0 }) {
   );
 }
 
+// ─── NAVBAR ──────────────────────────────────────────────────
+const navItems = [
+  { label: "Home", href: "#hero" },
+  { label: "Servizi", href: "#servizi" },
+  { label: "Soluzioni", href: "#soluzioni" },
+  { label: "Come lavoriamo", href: "#processo" },
+  { label: "Chi siamo", href: "#team" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contatti", href: "#contatti" },
+];
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Track active section
+  useEffect(() => {
+    const ids = navItems.map((n) => n.href.slice(1));
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
+
+  const handleClick = (e, href) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        background: scrolled ? C.dark + "ee" : "transparent",
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        borderBottom: scrolled ? `1px solid ${C.darkBorder}` : "1px solid transparent",
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+        {/* Logo */}
+        <a href="#hero" onClick={(e) => handleClick(e, "#hero")}>
+          <img
+            src="/logo-iridia.png"
+            alt="Iridia"
+            className="h-8 w-auto"
+            style={{ filter: "brightness(1.6) contrast(1.1)" }}
+          />
+        </a>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              onClick={(e) => handleClick(e, n.href)}
+              className="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+              style={{
+                color: activeSection === n.href.slice(1) ? C.lightBlue : C.gray,
+                background: activeSection === n.href.slice(1) ? C.darkCard : "transparent",
+              }}
+            >
+              {n.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden p-2 rounded-lg"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menu"
+          style={{ color: C.white }}
+        >
+          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            {menuOpen ? (
+              <path d="M6 6l12 12M6 18L18 6" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className="md:hidden overflow-hidden transition-all duration-300"
+        style={{
+          maxHeight: menuOpen ? "400px" : "0",
+          background: C.dark + "f5",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <div className="px-6 py-4 space-y-1">
+          {navItems.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              onClick={(e) => handleClick(e, n.href)}
+              className="block px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200"
+              style={{
+                color: activeSection === n.href.slice(1) ? C.lightBlue : C.gray,
+                background: activeSection === n.href.slice(1) ? C.darkCard : "transparent",
+              }}
+            >
+              {n.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 // ─── HERO ───────────────────────────────────────────────────
 function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
       <GradientBlob className="absolute w-[900px] h-[900px] -top-48 -right-48 opacity-60 pointer-events-none" />
       <GradientBlob className="absolute w-[600px] h-[600px] -bottom-32 -left-32 opacity-40 pointer-events-none" />
 
@@ -165,7 +297,7 @@ const pillars = [
 
 function WhatWeDo() {
   return (
-    <section className="py-24 px-6" style={{ background: C.dark }}>
+    <section id="servizi" className="py-24 px-6" style={{ background: C.dark }}>
       <div className="max-w-6xl mx-auto">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
@@ -227,7 +359,7 @@ function Problems() {
   };
 
   return (
-    <section className="py-24 px-6" style={{ background: C.navy }}>
+    <section id="soluzioni" className="py-24 px-6" style={{ background: C.navy }}>
       <div className="max-w-6xl mx-auto">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
@@ -297,7 +429,7 @@ const steps = [
 
 function Process() {
   return (
-    <section className="py-24 px-6" style={{ background: C.dark }}>
+    <section id="processo" className="py-24 px-6" style={{ background: C.dark }}>
       <div className="max-w-5xl mx-auto">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
@@ -430,7 +562,7 @@ function FAQ() {
   const [open, setOpen] = useState(-1);
 
   return (
-    <section className="py-24 px-6" style={{ background: C.navy }}>
+    <section id="faq" className="py-24 px-6" style={{ background: C.navy }}>
       <div className="max-w-3xl mx-auto">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16" style={{ color: C.white }}>
@@ -479,10 +611,31 @@ function FAQ() {
 }
 
 // ─── TEAM ───────────────────────────────────────────────────
+const teamMembers = [
+  {
+    name: "Massimiliano Giurelli",
+    role: "CTO & Co-Founder",
+    photo: "/Massimiliano.jpeg",
+    linkedin: "https://www.linkedin.com/in/massimiliano-giurelli/",
+  },
+  {
+    name: "Elena Giurelli",
+    role: "Co-Founder",
+    photo: "/Elena.jpeg",
+    linkedin: "https://www.linkedin.com/in/elena-giurelli-322aa3151/",
+  },
+  {
+    name: "Elisa Giurelli",
+    role: "UX Designer & Co-Founder",
+    photo: "/elisa.jpeg",
+    linkedin: "https://www.linkedin.com/in/elisa-giurelli-30522931a/",
+  },
+];
+
 function Team() {
   return (
-    <section className="py-24 px-6" style={{ background: C.dark }}>
-      <div className="max-w-4xl mx-auto text-center">
+    <section id="team" className="py-24 px-6" style={{ background: C.dark }}>
+      <div className="max-w-5xl mx-auto text-center">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: C.white }}>
             Chi siamo
@@ -494,25 +647,41 @@ function Team() {
           </p>
         </FadeSection>
 
-        <FadeSection delay={0.15}>
-          <div
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full border"
-            style={{ borderColor: C.darkBorder, background: C.darkCard }}
-          >
-            <div className="flex -space-x-3">
-              {[C.indigo, C.blue, C.lightBlue, C.accent].map((c, i) => (
-                <div
-                  key={i}
-                  className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold"
-                  style={{ background: c, borderColor: C.darkCard, color: "#fff" }}
+        <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
+          {teamMembers.map((m, i) => (
+            <FadeSection key={i} delay={i * 0.12}>
+              <div
+                className="rounded-2xl border p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/30"
+                style={{ background: C.darkCard, borderColor: C.darkBorder }}
+              >
+                <img
+                  src={m.photo}
+                  alt={m.name}
+                  className="w-28 h-28 rounded-full object-cover mb-5 border-2"
+                  style={{ borderColor: C.accent }}
+                />
+                <h3 className="text-lg font-semibold mb-1" style={{ color: C.white }}>
+                  {m.name}
+                </h3>
+                <p className="text-sm mb-4" style={{ color: C.lightBlue }}>
+                  {m.role}
+                </p>
+                <a
+                  href={m.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-200 hover:opacity-80"
+                  style={{ color: C.gray }}
                 >
-                  {["M", "A", "L", "S"][i]}
-                </div>
-              ))}
-            </div>
-            <span style={{ color: C.gray }}>Team Iridia</span>
-          </div>
-        </FadeSection>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill={C.gray}>
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                  LinkedIn
+                </a>
+              </div>
+            </FadeSection>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -521,7 +690,7 @@ function Team() {
 // ─── CTA FINALE ─────────────────────────────────────────────
 function CTAFinal() {
   return (
-    <section className="py-24 px-6" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
+    <section id="contatti" className="py-24 px-6" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
       <div className="max-w-3xl mx-auto text-center">
         <FadeSection>
           <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ color: C.white }}>
@@ -569,6 +738,7 @@ function Footer() {
 export default function IridiaLanding() {
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif", background: C.dark }}>
+      <Navbar />
       <Hero />
       <WhatWeDo />
       <Problems />
