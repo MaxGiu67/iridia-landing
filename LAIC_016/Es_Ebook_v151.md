@@ -1,0 +1,163 @@
+WBS 111-02-05-01-07 | Del. Es_Ebook | Vers. 151
+
+# Es. Ebook
+
+## Nota per il Partner
+
+Questo ebook è un contenuto gated: il CEO scarica in cambio della email. Obiettivo: portare da Schwartz 1-2 (non sa / sa ma non agisce) a 2+ (vuole capire di più). La CTA finale è l'iscrizione all'INTRO.
+
+Il contenuto è identico per entrambi i titoli. Scegli quello più adatto al tuo territorio e al tuo tono.
+
+**Titolo opzione A:** 6 problemi che costano alle PMI italiane migliaia di ore l'anno — e che i loro sistemi IT potrebbero già risolvere
+
+**Titolo opzione B:** Come 6 PMI su 10 perdono tempo e soldi su problemi che i loro dati risolverebbero da soli
+
+Formato consigliato: PDF, 8-10 pagine, layout pulito, una colonna. Niente stock photo. Se metti grafici, devono essere dati reali con fonte.
+
+**Tono:** empatico, da pari. Il Partner ha visto questi problemi in decine di aziende. Non diagnostica da fuori — riconosce. Il CEO deve pensare: "questo sa esattamente cosa succede da noi."
+
+**Documenti di riferimento:** questo ebook applica VP (212-01-01), Problemi (212-01-05), Desideri (212-01-06), TOV - Tone Of Voice (212-01-08), Niche (212-01-02). Le regole di composizione sono definite in Contenuto (111-02-05-01-03). Le statistiche sono censite in Statistiche usate in LAIC (111-01-17-01).
+
+---
+
+# [Titolo scelto dal Partner]
+
+## [Pagina 2 — Dato killer]
+
+**71%** delle grandi imprese italiane ha già progetti di intelligenza artificiale.
+
+**8%** delle PMI.
+
+Il divario non è di tecnologia. Non è di budget. È di metodo: nessuno dice alle PMI cosa possono fare concretamente con i dati che hanno già.
+
+(Fonte: Osservatorio Artificial Intelligence, Politecnico di Milano, febbraio 2026 — dati 2025.)
+
+---
+
+## Non parliamo di tecnologia. Parliamo della tua azienda.
+
+Questo non è un ebook sull'intelligenza artificiale. È un ebook sui problemi che conosci già — quelli che il tuo team affronta ogni giorno, che ti costano tempo e soldi, e che i tuoi sistemi potrebbero risolvere. Già oggi.
+
+Non servono sistemi nuovi. Non serve buttare via niente. Serve guardare quello che hai con occhi diversi.
+
+Nelle prossime pagine vedrai 6 situazioni. Le conosciamo bene perché le abbiamo viste in decine di aziende come la tua. Probabilmente ne riconoscerai almeno due o tre. Per ognuna: cosa succede oggi, quanto costa, e cosa cambierebbe.
+
+---
+
+## 1. Conoscenza dispersa
+
+Il tuo team accumula informazioni ovunque: email, cartelle, gestionali, SharePoint. Nessuno sa dove cercare. Spesso nemmeno sanno che l'informazione esiste già.
+
+Il commerciale cerca un'offerta fatta due anni fa. L'ufficio tecnico cerca una specifica di prodotto. L'amministrazione cerca una fattura. Tutti cercano, tutti perdono tempo. I nuovi assunti impiegano mesi a diventare autonomi perché nessuno sa dirgli "trovi tutto lì".
+
+Lo vediamo ogni volta. Il CEO lo sa, il team lo subisce, ma nessuno ha mai quantificato quanto costa davvero.
+
+**Quanto costa.** I knowledge worker dedicano circa il 20% del loro tempo a cercare informazioni¹. In un'azienda con 100 persone, sono 20 persone equivalenti che non producono — cercano. E ogni volta che qualcuno di esperto lascia l'azienda, un pezzo di know-how esce dalla porta con lui.
+
+**Cosa cambierebbe.** Un punto di accesso unico che interroga tutte le fonti — gestionale, cartelle, email, documenti — con linguaggio naturale. Fai una domanda, ottieni la risposta in secondi. In aziende simili alla tua, il tempo di ricerca si è ridotto di oltre il 70%². I nuovi arrivano e diventano autonomi in settimane, non in mesi. La conoscenza resta in azienda anche quando le persone cambiano.
+
+---
+
+## 2. Estrazione dati manuale
+
+Fatture, contratti, ordini, DDT. Ogni giorno arrivano documenti. Qualcuno deve leggerli, estrarre i dati, digitarli nel gestionale. Lento, noioso, pieno di errori.
+
+Questo è il problema che i CEO ci descrivono con più frustrazione. Non perché sia il più grave — ma perché sanno benissimo che quelle persone potrebbero fare cose più utili. E non riescono a liberarle.
+
+**Quanto costa.** Personale dedicato al data entry da PDF e carta. Tasso errore di trascrizione tra l'1% e il 5%³. Colli di bottiglia nei picchi — fine mese, fine anno. E la parte peggiore: se l'azienda cresce, l'unica opzione è assumere altri data entry. Lo stesso lavoro, per più persone.
+
+**Cosa cambierebbe.** Il sistema legge i documenti, estrae i campi, li passa al gestionale. L'operatore verifica solo i casi dubbi. In aziende che hanno fatto questo passo, il tempo di elaborazione si è ridotto di oltre l'80%⁴ e gli errori sono scesi sotto l'1%. Ma il risultato vero è un altro: le persone tornano a fare il lavoro per cui sono state assunte.
+
+---
+
+## 3. Customer service sovraccarico
+
+"A che punto è il mio ordine?" "Come si fa il reso?" "Avete il pezzo X a magazzino?" Il tuo team risponde a mano, ogni volta, alle stesse domande. Le FAQ sul sito nessuno le legge. Gli operatori copiano le stesse risposte tutto il giorno invece di gestire i casi complessi.
+
+Lo conosciamo bene questo scenario. E conosciamo anche la faccia del responsabile customer service quando gli chiedi "quante delle richieste che ricevi sono sempre le stesse?" — la risposta è sempre un sorriso amaro e un numero sopra il 60%.
+
+**Quanto costa.** Code di ticket che crescono nei picchi. Clienti frustrati dai tempi di attesa. SLA non rispettati. Turnover alto nel team support — perché fare copia-incolla tutto il giorno è frustrante. E nei picchi, servono assunzioni temporanee.
+
+**Cosa cambierebbe.** Le domande frequenti si risolvono da sole, 24 ore su 24, in meno di 30 secondi. I ticket vengono smistati automaticamente: quelli semplici al sistema, quelli complessi agli operatori. In aziende che l'hanno fatto, il carico sugli operatori è calato del 40-60%⁵. Ma la differenza che conta è questa: il team finalmente lavora sui casi che richiedono giudizio e competenza. E si vede — nel morale, nel turnover, nella qualità del servizio.
+
+---
+
+## 4. Report manuali
+
+Fine mese. L'analista apre il gestionale, esporta i dati, li copia in Excel, li formatta, aggiunge i commenti, manda il file al direttore. Tre giorni di lavoro. Il mese dopo, da capo. E quando il direttore chiede una variante — per reparto, per cliente, per periodo — si ricomincia.
+
+Ogni CEO a cui lo raccontiamo annuisce. Perché lo vive. E sa che quei tre giorni di lavoro producono numeri che quando arrivano sono già vecchi di una settimana.
+
+**Quanto costa.** Ore di lavoro ripetitivo per persone qualificate che potrebbero fare analisi vere. Excel con formule che si rompono. Report consegnati in ritardo, con errori scoperti dopo la distribuzione. E se servono report ad-hoc, impossibile farli in tempi utili.
+
+**Cosa cambierebbe.** Il report si genera automaticamente. I dati li prende direttamente dai tuoi sistemi, li aggrega, li presenta nel formato che serve. In aziende simili, il tempo di produzione si è ridotto fino al 90%⁶. Ma il vero cambiamento è decisionale: lunedì mattina apri la dashboard e i numeri sono lì, aggiornati, pronti. Decidi con dati freschi, non con sensazioni.
+
+---
+
+## 5. Approvazioni bloccate
+
+Il preventivo è pronto. L'ufficio lo manda al responsabile per approvazione. Il responsabile è in trasferta. L'email finisce in coda. Dopo 3 giorni qualcuno chiede "a che punto siamo?" e nessuno sa rispondere.
+
+Preventivi, ordini, ferie, acquisti, note spese — tutto passa per email. Niente tracciabilità, niente regole automatiche, niente visibilità sullo stato.
+
+Questo è il problema invisibile. Non compare nei report, non ha un costo a riga nel bilancio. Ma ogni CEO che lo riconosce sa esattamente la frustrazione di scoprire che un incasso è fermo da una settimana perché un'email è finita nello spam.
+
+**Quanto costa.** Ogni giorno di ritardo su un'approvazione è un giorno di ritardo su un incasso, una consegna, una decisione. E il rischio compliance: approvazioni fatte senza verifiche perché "urgeva".
+
+**Cosa cambierebbe.** Un workflow che sa chi deve approvare cosa, glielo manda automaticamente, gli ricorda se non risponde. Verifica automatica della conformità alle regole aziendali. Niente email perse. Niente "non avevo visto". Visibilità in tempo reale su ogni pratica. E tu sai sempre a che punto è tutto — senza dover chiedere a nessuno.
+
+---
+
+## 6. HR sommerso di lavoro ripetitivo
+
+Arrivano 200 CV per una posizione. L'HR li legge uno per uno, compila una tabella, fa una shortlist. Una settimana di lavoro. Intanto i candidati migliori accettano offerte altrove.
+
+Un neoassunto il primo giorno non sa dove trovare le procedure, chi chiamare, come funziona la mensa. Chiede all'HR. L'HR risponde alle stesse domande per ogni nuovo ingresso. I dipendenti chiedono ferie, buste paga, policy — e ogni volta è un ticket.
+
+Quando parliamo con i responsabili HR delle PMI, la frase che sentiamo più spesso è: "Non riesco a occuparmi delle persone perché passo il tempo a fare amministrazione." È una delle frustrazioni più profonde che incontriamo.
+
+**Quanto costa.** Tempi di assunzione lunghi, candidati persi alla concorrenza. Onboarding frammentato: turnover alto nel primo anno. HR visto come funzione amministrativa, zero tempo per iniziative strategiche.
+
+**Cosa cambierebbe.** Screening CV ridotto dell'80%⁷ — 200 CV analizzati in 10 minuti, shortlist ordinata per fit. Neoassunti guidati da un assistente che risponde a tutto, 24/7, dal primo giorno. Dipendenti autonomi sulle domande ricorrenti. E l'HR torna a fare quello per cui esiste: occuparsi delle persone, non delle pratiche.
+
+---
+
+## Il filo rosso
+
+Hai notato? I 6 problemi sono diversi — conoscenza, documenti, customer service, report, approvazioni, HR — ma hanno tutti la stessa causa.
+
+**I dati per risolverli li hai già.** Stanno nel gestionale, nel CRM, nelle email, nei documenti, nei log di produzione. Anni di dati. Sono lì, li usi per fatturare, ma non li usi per decidere, prevedere, automatizzare. E più i tuoi sistemi sono in piedi da tempo, più dati hanno accumulato — più hanno da offrire.
+
+Non è colpa tua. Fino a poco tempo fa, usare quei dati in quel modo era impossibile o costosissimo. Oggi non lo è più. Il mercato dell'intelligenza artificiale in Italia vale 1,8 miliardi di euro e cresce del 50% l'anno⁸ — ma quasi tutto va alle grandi imprese. Le PMI hanno gli stessi dati, spesso gli stessi sistemi. Gli manca un metodo strutturato e qualcuno di cui fidarsi che gli dica da dove partire.
+
+Non un chatbot generico. Non un esperimento. Un percorso con applicazioni già collaudate su aziende simili alla tua, con risultati misurabili e un punto di stop a ogni fase se qualcosa non torna.
+
+---
+
+## Quanti di questi problemi riconosci?
+
+Se ti sei riconosciuto in almeno 2 dei 6, vale la pena di capire meglio. Non per comprare qualcosa — per capire.
+
+Prenota 30 minuti con noi. Se l'AI ha senso per la tua azienda, te lo diciamo. Se non ce l'ha, te lo diciamo lo stesso.
+
+| Canale | Riferimento |
+|---|---|
+| WhatsApp | [Nome Cognome] [Tel.] |
+| LinkedIn | [LinkedIn link] |
+| Email | [email titolare] |
+| Call dedicata | [nome sito]/intro |
+
+---
+
+## Fonti
+
+| # | Dato | Fonte |
+|---|---|---|
+| 1 | 20% del tempo dei knowledge worker dedicato alla ricerca di informazioni | McKinsey Global Institute |
+| 2 | Riduzione tempo di ricerca >70% con AI su knowledge base aziendali | Microsoft, Work Trend Index 2024 |
+| 3 | Tasso errore trascrizione manuale 1-5% | AIIM, benchmark data entry |
+| 4 | Riduzione tempo elaborazione documenti >80% con IDP | Benchmark settore: ABBYY, Kofax, UiPath |
+| 5 | Riduzione carico customer service 40-60% con AI | Gartner, Predicts 2024: AI in Customer Service |
+| 6 | Riduzione tempo produzione report >90% con automazione | Benchmark BI automation: Tableau, Power BI |
+| 7 | Riduzione tempo screening CV >80% con AI | LinkedIn Talent Solutions 2024 |
+| 8 | Mercato AI Italia €1,8 mld, +50%, 71% grandi imprese vs 8% PMI | Osservatorio AI, Politecnico di Milano, feb. 2026 |
