@@ -617,7 +617,7 @@ function FAQ() {
 const teamMembers = [
   {
     name: "Massimiliano Giurelli",
-    role: "CTO & Co-Founder",
+    role: "CTO",
     photo: "/Massimiliano.jpeg",
     linkedin: "https://www.linkedin.com/in/massimiliano-giurelli/",
   },
