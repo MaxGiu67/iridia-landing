@@ -19,6 +19,50 @@ const C = {
   grayLight: "#c4d1e8",
 };
 
+// ─── Floating circles background ─────────────────────────────
+function FloatingCircles({ count = 12, className = "" }) {
+  const circles = useRef(
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      size: 4 + Math.random() * 60,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      duration: 15 + Math.random() * 25,
+      delay: Math.random() * -20,
+      opacity: 0.03 + Math.random() * 0.08,
+      color: [C.indigo, C.lightBlue, C.blue, C.accent][Math.floor(Math.random() * 4)],
+    }))
+  ).current;
+
+  return (
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
+      {circles.map((c) => (
+        <div
+          key={c.id}
+          className="absolute rounded-full"
+          style={{
+            width: c.size,
+            height: c.size,
+            left: `${c.x}%`,
+            top: `${c.y}%`,
+            background: `radial-gradient(circle, ${c.color}, transparent 70%)`,
+            opacity: c.opacity,
+            animation: `floatCircle ${c.duration}s ease-in-out ${c.delay}s infinite`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes floatCircle {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          25% { transform: translate(30px, -40px) scale(1.15); }
+          50% { transform: translate(-20px, 20px) scale(0.9); }
+          75% { transform: translate(15px, 30px) scale(1.1); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ─── Animated gradient blob (SVG, no deps) ──────────────────
 function GradientBlob({ className }) {
   return (
@@ -39,7 +83,7 @@ function GradientBlob({ className }) {
 }
 
 // ─── Fade-in on scroll hook ─────────────────────────────────
-function useFadeIn() {
+function useFadeIn(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -47,24 +91,39 @@ function useFadeIn() {
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.15 }
+      { threshold }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [threshold]);
   return [ref, visible];
 }
 
-function FadeSection({ children, className = "", delay = 0 }) {
+// animation variants: "up", "left", "right", "scale", "blur"
+function FadeSection({ children, className = "", delay = 0, variant = "up" }) {
   const [ref, vis] = useFadeIn();
+
+  const variants = {
+    up: { hidden: "translateY(40px)", visible: "translateY(0)" },
+    left: { hidden: "translateX(-50px)", visible: "translateX(0)" },
+    right: { hidden: "translateX(50px)", visible: "translateX(0)" },
+    scale: { hidden: "scale(0.85)", visible: "scale(1)" },
+    blur: { hidden: "translateY(20px)", visible: "translateY(0)" },
+  };
+
+  const v = variants[variant] || variants.up;
+  const filterHidden = variant === "blur" ? "blur(8px)" : "none";
+  const filterVisible = "blur(0px)";
+
   return (
     <div
       ref={ref}
       className={className}
       style={{
         opacity: vis ? 1 : 0,
-        transform: vis ? "translateY(0)" : "translateY(32px)",
-        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
+        transform: vis ? v.visible : v.hidden,
+        filter: vis ? filterVisible : filterHidden,
+        transition: `opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s, filter 0.8s ease ${delay}s`,
       }}
     >
       {children}
@@ -211,6 +270,7 @@ function Navbar() {
 function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
+      <FloatingCircles count={18} />
       <GradientBlob className="absolute w-[900px] h-[900px] -top-48 -right-48 opacity-60 pointer-events-none" />
       <GradientBlob className="absolute w-[600px] h-[600px] -bottom-32 -left-32 opacity-40 pointer-events-none" />
 
@@ -300,9 +360,10 @@ const pillars = [
 
 function WhatWeDo() {
   return (
-    <section id="servizi" className="py-24 px-6" style={{ background: C.dark }}>
-      <div className="max-w-6xl mx-auto">
-        <FadeSection>
+    <section id="servizi" className="py-24 px-6 relative" style={{ background: C.dark }}>
+      <FloatingCircles count={8} />
+      <div className="max-w-6xl mx-auto relative z-10">
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
             Cosa facciamo
           </h2>
@@ -313,12 +374,12 @@ function WhatWeDo() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {pillars.map((p, i) => (
-            <FadeSection key={i} delay={i * 0.12}>
+            <FadeSection key={i} delay={i * 0.15} variant={["left", "up", "right"][i]}>
               <div
-                className="p-8 rounded-2xl border h-full transition-all duration-300 hover:border-blue-500/30"
+                className="p-8 rounded-2xl border h-full transition-all duration-500 hover:border-blue-500/40 hover:-translate-y-2 hover:shadow-lg hover:shadow-blue-500/5 group"
                 style={{ background: C.darkCard, borderColor: C.darkBorder }}
               >
-                <div className="mb-5">{p.icon}</div>
+                <div className="mb-5 transition-transform duration-500 group-hover:scale-110">{p.icon}</div>
                 <h3 className="text-xl font-semibold mb-3" style={{ color: C.white }}>{p.title}</h3>
                 <p className="leading-relaxed" style={{ color: C.gray }}>{p.desc}</p>
               </div>
@@ -362,9 +423,10 @@ function Problems() {
   };
 
   return (
-    <section id="soluzioni" className="py-24 px-6" style={{ background: C.navy }}>
-      <div className="max-w-6xl mx-auto">
-        <FadeSection>
+    <section id="soluzioni" className="py-24 px-6 relative" style={{ background: C.navy }}>
+      <FloatingCircles count={6} />
+      <div className="max-w-6xl mx-auto relative z-10">
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
             Problemi reali, soluzioni concrete
           </h2>
@@ -375,7 +437,7 @@ function Problems() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {problems.map((p, i) => (
-            <FadeSection key={i} delay={i * 0.1}>
+            <FadeSection key={i} delay={i * 0.1} variant={i % 2 === 0 ? "left" : "right"}>
               <div
                 className="cursor-pointer group"
                 onClick={() => toggle(i)}
@@ -430,11 +492,75 @@ const steps = [
   { num: "04", title: "Ti rendiamo autonomo", desc: "Formazione, documentazione, handover. A fine progetto il tuo team sa gestire tutto in autonomia." },
 ];
 
+function ProcessStep({ step, index, total }) {
+  const [ref, visible] = useFadeIn(0.3);
+  const [glowing, setGlowing] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      const timer = setTimeout(() => setGlowing(true), index * 400);
+      return () => clearTimeout(timer);
+    }
+  }, [visible, index]);
+
+  return (
+    <div ref={ref} className="flex gap-6 sm:gap-10 items-start py-8">
+      {/* Timeline node */}
+      <div className="flex flex-col items-center flex-shrink-0">
+        <div
+          className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg border-2 transition-all duration-700 relative"
+          style={{
+            borderColor: glowing ? C.lightBlue : C.darkBorder,
+            color: glowing ? "#fff" : C.lightBlue,
+            background: glowing ? `linear-gradient(135deg, ${C.indigo}, ${C.accent})` : C.darkCard,
+            boxShadow: glowing ? `0 0 20px ${C.lightBlue}44, 0 0 40px ${C.accent}22` : "none",
+            transform: glowing ? "scale(1.1)" : "scale(1)",
+          }}
+        >
+          {step.num}
+          {glowing && (
+            <div
+              className="absolute inset-0 rounded-full animate-ping"
+              style={{ border: `2px solid ${C.lightBlue}`, opacity: 0.3 }}
+            />
+          )}
+        </div>
+        {index < total - 1 && (
+          <div className="w-px flex-1 min-h-[40px] relative overflow-hidden" style={{ background: C.darkBorder }}>
+            <div
+              className="absolute top-0 left-0 w-full transition-all duration-1000 ease-out"
+              style={{
+                height: glowing ? "100%" : "0%",
+                background: `linear-gradient(to bottom, ${C.lightBlue}, ${C.accent}44)`,
+                transitionDelay: `${0.3}s`,
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div
+        className="pt-2 transition-all duration-700"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateX(0)" : "translateX(30px)",
+          transitionDelay: `${index * 0.15}s`,
+        }}
+      >
+        <h3 className="text-xl font-semibold mb-2" style={{ color: C.white }}>{step.title}</h3>
+        <p className="leading-relaxed" style={{ color: C.gray }}>{step.desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function Process() {
   return (
-    <section id="processo" className="py-24 px-6" style={{ background: C.dark }}>
-      <div className="max-w-5xl mx-auto">
-        <FadeSection>
+    <section id="processo" className="py-24 px-6 relative" style={{ background: C.dark }}>
+      <FloatingCircles count={6} />
+      <div className="max-w-5xl mx-auto relative z-10">
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4" style={{ color: C.white }}>
             Come lavoriamo
           </h2>
@@ -445,28 +571,7 @@ function Process() {
 
         <div className="space-y-0">
           {steps.map((s, i) => (
-            <FadeSection key={i} delay={i * 0.12}>
-              <div className="flex gap-6 sm:gap-10 items-start py-8 group">
-                {/* Timeline */}
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg border-2 transition-colors duration-300 group-hover:border-blue-400"
-                    style={{ borderColor: C.darkBorder, color: C.lightBlue, background: C.darkCard }}
-                  >
-                    {s.num}
-                  </div>
-                  {i < steps.length - 1 && (
-                    <div className="w-px flex-1 min-h-[40px]" style={{ background: C.darkBorder }} />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="pt-2">
-                  <h3 className="text-xl font-semibold mb-2" style={{ color: C.white }}>{s.title}</h3>
-                  <p className="leading-relaxed" style={{ color: C.gray }}>{s.desc}</p>
-                </div>
-              </div>
-            </FadeSection>
+            <ProcessStep key={i} step={s} index={i} total={steps.length} />
           ))}
         </div>
       </div>
@@ -475,35 +580,57 @@ function Process() {
 }
 
 // ─── APPROCCIO ──────────────────────────────────────────────
+function ApproachLine({ text, index }) {
+  const [ref, visible] = useFadeIn(0.2);
+  return (
+    <p
+      ref={ref}
+      className="text-lg sm:text-xl leading-relaxed flex items-start gap-4 transition-all duration-700"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateX(0)" : "translateX(-30px)",
+        transitionDelay: `${index * 0.12}s`,
+      }}
+    >
+      <span
+        className="mt-1.5 w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all duration-500"
+        style={{
+          background: visible ? C.lightBlue : C.darkBorder,
+          boxShadow: visible ? `0 0 8px ${C.lightBlue}66` : "none",
+          transitionDelay: `${index * 0.12 + 0.3}s`,
+        }}
+      />
+      <span style={{ color: C.white }}>{text}</span>
+    </p>
+  );
+}
+
 function Approach() {
+  const lines = [
+    "Non sostituiamo i tuoi sistemi. Li rendiamo più intelligenti.",
+    "Non vendiamo tecnologia. Risolviamo problemi concreti con l'AI.",
+    "Non facciamo progetti senza fine. Tempi definiti, risultati misurabili.",
+    "Non creiamo dipendenza. A fine progetto il tuo team è autonomo.",
+    "Non parliamo di futuro. Parliamo di quello che cambia lunedì mattina.",
+  ];
+
   return (
     <section className="py-24 px-6" style={{ background: C.navy }}>
       <div className="max-w-4xl mx-auto text-center">
-        <FadeSection>
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ color: C.white }}>
             Il nostro approccio
           </h2>
         </FadeSection>
 
-        <FadeSection delay={0.1}>
-          <div
-            className="rounded-2xl border p-10 sm:p-14 text-left space-y-6"
-            style={{ background: C.darkCard, borderColor: C.darkBorder }}
-          >
-            {[
-              "Non sostituiamo i tuoi sistemi. Li rendiamo più intelligenti.",
-              "Non vendiamo tecnologia. Risolviamo problemi concreti con l'AI.",
-              "Non facciamo progetti senza fine. Tempi definiti, risultati misurabili.",
-              "Non creiamo dipendenza. A fine progetto il tuo team è autonomo.",
-              "Non parliamo di futuro. Parliamo di quello che cambia lunedì mattina.",
-            ].map((line, i) => (
-              <p key={i} className="text-lg sm:text-xl leading-relaxed flex items-start gap-4">
-                <span className="mt-1.5 w-2 h-2 rounded-full flex-shrink-0" style={{ background: C.lightBlue }} />
-                <span style={{ color: C.white }}>{line}</span>
-              </p>
-            ))}
-          </div>
-        </FadeSection>
+        <div
+          className="rounded-2xl border p-10 sm:p-14 text-left space-y-6"
+          style={{ background: C.darkCard, borderColor: C.darkBorder }}
+        >
+          {lines.map((line, i) => (
+            <ApproachLine key={i} text={line} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -514,7 +641,7 @@ function Market() {
   return (
     <section className="py-24 px-6" style={{ background: C.dark }}>
       <div className="max-w-4xl mx-auto">
-        <FadeSection>
+        <FadeSection variant="scale">
           <div
             className="rounded-2xl border p-10 sm:p-14 text-center"
             style={{
@@ -567,7 +694,7 @@ function FAQ() {
   return (
     <section id="faq" className="py-24 px-6" style={{ background: C.navy }}>
       <div className="max-w-3xl mx-auto">
-        <FadeSection>
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16" style={{ color: C.white }}>
             Domande frequenti
           </h2>
@@ -575,7 +702,7 @@ function FAQ() {
 
         <div className="space-y-3">
           {faqs.map((f, i) => (
-            <FadeSection key={i} delay={i * 0.08}>
+            <FadeSection key={i} delay={i * 0.08} variant="right">
               <div
                 className="rounded-xl border overflow-hidden transition-colors duration-300"
                 style={{ background: C.darkCard, borderColor: open === i ? C.accent + "55" : C.darkBorder }}
@@ -637,9 +764,10 @@ const teamMembers = [
 
 function Team() {
   return (
-    <section id="team" className="py-24 px-6" style={{ background: C.dark }}>
-      <div className="max-w-5xl mx-auto text-center">
-        <FadeSection>
+    <section id="team" className="py-24 px-6 relative" style={{ background: C.dark }}>
+      <FloatingCircles count={6} />
+      <div className="max-w-5xl mx-auto text-center relative z-10">
+        <FadeSection variant="blur">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: C.white }}>
             Chi siamo
           </h2>
@@ -652,9 +780,9 @@ function Team() {
 
         <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
           {teamMembers.map((m, i) => (
-            <FadeSection key={i} delay={i * 0.12}>
+            <FadeSection key={i} delay={i * 0.15} variant="scale">
               <div
-                className="rounded-2xl border p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/30"
+                className="rounded-2xl border p-6 flex flex-col items-center text-center transition-all duration-500 hover:border-blue-500/40 hover:-translate-y-3 hover:shadow-xl hover:shadow-blue-500/10"
                 style={{ background: C.darkCard, borderColor: C.darkBorder }}
               >
                 <img
@@ -693,9 +821,10 @@ function Team() {
 // ─── CTA FINALE ─────────────────────────────────────────────
 function CTAFinal() {
   return (
-    <section id="contatti" className="py-24 px-6" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
-      <div className="max-w-3xl mx-auto text-center">
-        <FadeSection>
+    <section id="contatti" className="py-24 px-6 relative" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
+      <FloatingCircles count={10} />
+      <div className="max-w-3xl mx-auto text-center relative z-10">
+        <FadeSection variant="scale">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ color: C.white }}>
             Vuoi capire cosa può fare l'AI
             <br />
@@ -706,10 +835,10 @@ function CTAFinal() {
           </p>
         </FadeSection>
 
-        <FadeSection delay={0.15}>
+        <FadeSection delay={0.15} variant="up">
           <a
             href="mailto:info@iridia.tech"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20"
             style={{ background: C.accent, color: "#fff" }}
           >
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
