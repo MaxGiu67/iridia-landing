@@ -241,24 +241,16 @@ function Problems() {
           {problems.map((p, i) => (
             <FadeSection key={i} delay={i * 0.1}>
               <div
-                className="relative cursor-pointer group"
-                style={{ perspective: "1000px", minHeight: "200px" }}
+                className="cursor-pointer group"
                 onClick={() => toggle(i)}
               >
-                <div
-                  className="w-full h-full transition-transform duration-500"
-                  style={{
-                    transformStyle: "preserve-3d",
-                    transform: flipped[i] ? "rotateY(180deg)" : "rotateY(0)",
-                  }}
-                >
-                  {/* Front — problem */}
+                {!flipped[i] ? (
                   <div
-                    className="absolute inset-0 rounded-2xl border p-8 flex flex-col justify-center"
+                    className="rounded-2xl border p-8 flex flex-col justify-center transition-all duration-300 hover:border-blue-500/30"
                     style={{
-                      backfaceVisibility: "hidden",
                       background: C.darkCard,
                       borderColor: C.darkBorder,
+                      minHeight: "180px",
                     }}
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -268,15 +260,13 @@ function Problems() {
                     <p className="text-lg leading-relaxed" style={{ color: C.white }}>{p.problem}</p>
                     <p className="mt-4 text-sm" style={{ color: C.gray }}>Clicca per la soluzione →</p>
                   </div>
-
-                  {/* Back — solution */}
+                ) : (
                   <div
-                    className="absolute inset-0 rounded-2xl border p-8 flex flex-col justify-center"
+                    className="rounded-2xl border p-8 flex flex-col justify-center transition-all duration-300"
                     style={{
-                      backfaceVisibility: "hidden",
-                      transform: "rotateY(180deg)",
                       background: `linear-gradient(135deg, ${C.darkCard}, #0f1f3a)`,
                       borderColor: C.accent,
+                      minHeight: "180px",
                     }}
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -284,8 +274,9 @@ function Problems() {
                       <span className="text-sm font-medium uppercase tracking-wider" style={{ color: C.lightBlue }}>Soluzione Iridia</span>
                     </div>
                     <p className="text-lg leading-relaxed" style={{ color: C.white }}>{p.solution}</p>
+                    <p className="mt-4 text-sm" style={{ color: C.gray }}>← Torna al problema</p>
                   </div>
-                </div>
+                )}
               </div>
             </FadeSection>
           ))}
