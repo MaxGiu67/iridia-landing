@@ -19,6 +19,153 @@ const C = {
   grayLight: "#c4d1e8",
 };
 
+// ─── Particle grid (circle dots with connections) ────────────
+function ParticleGrid() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animId;
+    let particles = [];
+    let mouse = { x: -1000, y: -1000 };
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      initParticles();
+    };
+
+    const initParticles = () => {
+      particles = [];
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      const spacing = 50;
+      const cols = Math.ceil(w / spacing) + 1;
+      const rows = Math.ceil(h / spacing) + 1;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          particles.push({
+            baseX: c * spacing + (r % 2 ? spacing / 2 : 0),
+            baseY: r * spacing,
+            x: c * spacing + (r % 2 ? spacing / 2 : 0),
+            y: r * spacing,
+            size: 1.5 + Math.random() * 1.5,
+            pulseSpeed: 0.5 + Math.random() * 1.5,
+            pulseOffset: Math.random() * Math.PI * 2,
+            driftX: (Math.random() - 0.5) * 0.3,
+            driftY: (Math.random() - 0.5) * 0.3,
+          });
+        }
+      }
+    };
+
+    const onMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+    const onLeave = () => { mouse.x = -1000; mouse.y = -1000; };
+
+    const draw = (time) => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+      const t = time * 0.001;
+
+      // Update positions
+      for (const p of particles) {
+        p.x = p.baseX + Math.sin(t * p.driftX * 2 + p.pulseOffset) * 8;
+        p.y = p.baseY + Math.cos(t * p.driftY * 2 + p.pulseOffset) * 8;
+      }
+
+      // Draw connections
+      const connDist = 65;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < connDist) {
+            const alpha = (1 - dist / connDist) * 0.08;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(80, 176, 240, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw circles and mouse interaction
+      const mouseRadius = 120;
+      for (const p of particles) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const mouseDist = Math.sqrt(dx * dx + dy * dy);
+        const mouseInfluence = mouseDist < mouseRadius ? 1 - mouseDist / mouseRadius : 0;
+
+        const pulse = 0.3 + Math.sin(t * p.pulseSpeed + p.pulseOffset) * 0.2;
+        const alpha = Math.min(pulse + mouseInfluence * 0.6, 1);
+        const size = p.size + mouseInfluence * 3;
+
+        // Glow for mouse-nearby particles
+        if (mouseInfluence > 0.1) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, size + 4, 0, Math.PI * 2);
+          const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size + 4);
+          glow.addColorStop(0, `rgba(80, 176, 240, ${mouseInfluence * 0.3})`);
+          glow.addColorStop(1, "rgba(80, 176, 240, 0)");
+          ctx.fillStyle = glow;
+          ctx.fill();
+        }
+
+        // Draw connections to mouse
+        if (mouseInfluence > 0.2) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(80, 176, 240, ${mouseInfluence * 0.15})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+
+        // Circle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(80, 176, 240, ${alpha})`;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(draw);
+    };
+
+    resize();
+    animId = requestAnimationFrame(draw);
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("mousemove", onMove);
+    canvas.addEventListener("mouseleave", onLeave);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-auto"
+      style={{ opacity: 0.6 }}
+    />
+  );
+}
+
 // ─── Floating circles background ─────────────────────────────
 function FloatingCircles({ count = 12, className = "" }) {
   const circles = useRef(
@@ -270,7 +417,7 @@ function Navbar() {
 function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
-      <FloatingCircles count={18} />
+      <ParticleGrid />
       <GradientBlob className="absolute w-[900px] h-[900px] -top-48 -right-48 opacity-60 pointer-events-none" />
       <GradientBlob className="absolute w-[600px] h-[600px] -bottom-32 -left-32 opacity-40 pointer-events-none" />
 
