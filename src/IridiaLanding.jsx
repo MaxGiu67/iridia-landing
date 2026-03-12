@@ -555,8 +555,10 @@ function CTAFinal() {
 function Footer() {
   return (
     <footer className="py-8 px-6 text-center" style={{ background: C.dark, borderTop: `1px solid ${C.darkBorder}` }}>
-      <p className="text-sm" style={{ color: C.gray + "88" }}>
-        Iridia S.r.l. — P.IVA 00000000000 — info@iridia.tech
+      <p className="text-sm leading-relaxed" style={{ color: C.gray + "88" }}>
+        Iridia S.R.L. — P.IVA 10604401215 — Via M. Cervantes de Saavedra 55/27, 80133 Napoli (NA)
+        <br />
+        PEC: iridiasrl@pec.it — info@iridia.tech
       </p>
     </footer>
   );
