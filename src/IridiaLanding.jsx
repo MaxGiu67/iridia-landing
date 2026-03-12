@@ -85,7 +85,8 @@ function Hero() {
           <img
             src="/logo-iridia.png"
             alt="Iridia"
-            className="h-14 sm:h-16 md:h-20 w-auto mx-auto mb-8"
+            className="h-20 sm:h-24 md:h-28 w-auto mx-auto mb-8"
+            style={{ filter: "brightness(1.6) contrast(1.1)" }}
           />
         </FadeSection>
 
