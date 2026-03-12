@@ -721,21 +721,344 @@ function CTAFinal() {
   );
 }
 
-// ─── FOOTER ─────────────────────────────────────────────────
-function Footer() {
+// ─── POLICY OVERLAY ─────────────────────────────────────────
+function PolicyOverlay({ title, children, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   return (
-    <footer className="py-8 px-6 text-center" style={{ background: C.dark, borderTop: `1px solid ${C.darkBorder}` }}>
-      <p className="text-sm leading-relaxed" style={{ color: C.gray + "88" }}>
-        Iridia S.R.L. — P.IVA 10604401215 — Via M. Cervantes de Saavedra 55/27, 80133 Napoli (NA)
-        <br />
-        PEC: iridiasrl@pec.it — info@iridia.tech
+    <div className="fixed inset-0 z-[100] flex items-start justify-center" style={{ background: "rgba(0,0,0,0.85)" }}>
+      <div
+        className="relative w-full max-w-3xl mx-4 my-8 rounded-2xl border overflow-y-auto"
+        style={{ background: C.darkCard, borderColor: C.darkBorder, maxHeight: "90vh" }}
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b" style={{ background: C.darkCard, borderColor: C.darkBorder }}>
+          <h2 className="text-xl font-bold" style={{ color: C.white }}>{title}</h2>
+          <button onClick={onClose} className="p-2 rounded-lg hover:opacity-70 transition" style={{ color: C.gray }}>
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M6 6l12 12M6 18L18 6" />
+            </svg>
+          </button>
+        </div>
+        <div className="p-6 sm:p-8 space-y-6 text-sm leading-relaxed" style={{ color: C.grayLight }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }) {
+  return <h3 className="text-lg font-semibold mt-8 mb-3" style={{ color: C.white }}>{children}</h3>;
+}
+
+// ─── PRIVACY POLICY ─────────────────────────────────────────
+function PrivacyPolicy({ onClose }) {
+  return (
+    <PolicyOverlay title="Privacy Policy" onClose={onClose}>
+      <p>Ultimo aggiornamento: marzo 2026</p>
+      <p>
+        La presente informativa descrive le modalità di trattamento dei dati personali degli utenti che consultano
+        il sito web <strong>www.iridia.tech</strong> (di seguito "Sito"), ai sensi dell'art. 13 del Regolamento (UE) 2016/679
+        (GDPR) e del D.Lgs. 196/2003 (Codice Privacy).
       </p>
+
+      <SectionTitle>1. Titolare del Trattamento</SectionTitle>
+      <p>
+        <strong>Iridia S.R.L.</strong><br />
+        Sede legale: Via M. Cervantes de Saavedra 55/27, 80133 Napoli (NA)<br />
+        P.IVA: 10604401215<br />
+        PEC: iridiasrl@pec.it<br />
+        Email: info@iridia.tech
+      </p>
+
+      <SectionTitle>2. Dati raccolti</SectionTitle>
+      <p>Il Sito può raccogliere le seguenti categorie di dati:</p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li><strong>Dati di navigazione:</strong> indirizzo IP, tipo di browser, sistema operativo, pagine visitate, orari di accesso, raccolti automaticamente dai sistemi informatici.</li>
+        <li><strong>Dati forniti volontariamente:</strong> nome, cognome, indirizzo email e qualsiasi altra informazione trasmessa dall'utente tramite email o moduli di contatto.</li>
+        <li><strong>Cookie:</strong> si rimanda alla Cookie Policy per i dettagli.</li>
+      </ul>
+
+      <SectionTitle>3. Finalità e base giuridica del trattamento</SectionTitle>
+      <ul className="list-disc pl-6 space-y-1">
+        <li><strong>Funzionamento del sito</strong> (interesse legittimo, art. 6.1.f GDPR): garantire la corretta erogazione del servizio.</li>
+        <li><strong>Riscontro a richieste</strong> (esecuzione di misure precontrattuali, art. 6.1.b GDPR): rispondere alle richieste inviate dall'utente.</li>
+        <li><strong>Analisi statistiche anonime</strong> (interesse legittimo, art. 6.1.f GDPR): migliorare il Sito tramite dati aggregati e anonimi.</li>
+        <li><strong>Obblighi di legge</strong> (art. 6.1.c GDPR): adempiere a obblighi normativi.</li>
+      </ul>
+
+      <SectionTitle>4. Destinatari dei dati</SectionTitle>
+      <p>
+        I dati possono essere comunicati a fornitori di servizi tecnici (hosting, manutenzione) che operano in qualità
+        di responsabili del trattamento ai sensi dell'art. 28 GDPR. I dati non vengono venduti o ceduti a terzi per
+        finalità di marketing.
+      </p>
+
+      <SectionTitle>5. Trasferimento dei dati</SectionTitle>
+      <p>
+        Alcuni fornitori di servizi potrebbero avere sede al di fuori dell'UE/SEE. In tal caso, il trasferimento avviene
+        sulla base di garanzie adeguate (Clausole Contrattuali Standard della Commissione Europea, decisioni di adeguatezza
+        o altri strumenti previsti dal GDPR).
+      </p>
+
+      <SectionTitle>6. Periodo di conservazione</SectionTitle>
+      <p>
+        I dati di navigazione vengono cancellati dopo la chiusura della sessione o al massimo entro 24 mesi.
+        I dati forniti tramite email vengono conservati per il tempo necessario a gestire la richiesta e comunque
+        non oltre 24 mesi dall'ultimo contatto, salvo obblighi di legge.
+      </p>
+
+      <SectionTitle>7. Diritti dell'interessato</SectionTitle>
+      <p>L'utente ha il diritto di:</p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li>Accedere ai propri dati personali (art. 15 GDPR)</li>
+        <li>Ottenere la rettifica dei dati inesatti (art. 16 GDPR)</li>
+        <li>Ottenere la cancellazione dei dati (art. 17 GDPR)</li>
+        <li>Limitare il trattamento (art. 18 GDPR)</li>
+        <li>Opporsi al trattamento (art. 21 GDPR)</li>
+        <li>Richiedere la portabilità dei dati (art. 20 GDPR)</li>
+        <li>Revocare il consenso in qualsiasi momento</li>
+        <li>Proporre reclamo al Garante per la Protezione dei Dati Personali (www.garanteprivacy.it)</li>
+      </ul>
+      <p>Per esercitare i propri diritti, scrivere a: <strong>info@iridia.tech</strong></p>
+
+      <SectionTitle>8. Modifiche alla presente informativa</SectionTitle>
+      <p>
+        Il Titolare si riserva di modificare la presente informativa. L'utente è invitato a consultare
+        periodicamente questa pagina.
+      </p>
+    </PolicyOverlay>
+  );
+}
+
+// ─── COOKIE POLICY ──────────────────────────────────────────
+function CookiePolicy({ onClose }) {
+  return (
+    <PolicyOverlay title="Cookie Policy" onClose={onClose}>
+      <p>Ultimo aggiornamento: marzo 2026</p>
+      <p>
+        Questa Cookie Policy descrive l'utilizzo dei cookie e tecnologie simili sul sito <strong>www.iridia.tech</strong>,
+        in conformità con il Regolamento (UE) 2016/679 (GDPR), la Direttiva 2002/58/CE (ePrivacy) e le
+        Linee Guida del Garante Privacy italiano sui cookie del 10 giugno 2021.
+      </p>
+
+      <SectionTitle>1. Cosa sono i cookie</SectionTitle>
+      <p>
+        I cookie sono piccoli file di testo che i siti web visitati inviano al browser dell'utente, dove vengono
+        memorizzati per essere ritrasmessi agli stessi siti alla visita successiva.
+      </p>
+
+      <SectionTitle>2. Cookie utilizzati dal Sito</SectionTitle>
+
+      <h4 className="font-semibold mt-4 mb-2" style={{ color: C.white }}>a) Cookie tecnici (necessari)</h4>
+      <p>
+        Questi cookie sono essenziali per il corretto funzionamento del Sito. Non richiedono il consenso dell'utente.
+      </p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li><strong>cookie_consent:</strong> memorizza la preferenza dell'utente sui cookie. Durata: 12 mesi.</li>
+      </ul>
+
+      <h4 className="font-semibold mt-4 mb-2" style={{ color: C.white }}>b) Cookie analitici</h4>
+      <p>
+        Attualmente il Sito non utilizza cookie analitici di terze parti. Qualora venissero introdotti in futuro
+        (es. Google Analytics in forma anonimizzata), questa policy verrà aggiornata e sarà richiesto il consenso
+        dell'utente ove necessario.
+      </p>
+
+      <h4 className="font-semibold mt-4 mb-2" style={{ color: C.white }}>c) Cookie di profilazione</h4>
+      <p>Il Sito non utilizza cookie di profilazione.</p>
+
+      <SectionTitle>3. Cookie di terze parti</SectionTitle>
+      <p>
+        Il Sito utilizza Google Fonts per il caricamento dei caratteri tipografici. Google potrebbe raccogliere
+        dati relativi all'indirizzo IP dell'utente. Per maggiori informazioni, consultare la privacy policy di Google.
+      </p>
+
+      <SectionTitle>4. Come gestire i cookie</SectionTitle>
+      <p>L'utente può gestire le preferenze sui cookie in diversi modi:</p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li><strong>Banner cookie:</strong> al primo accesso al Sito è possibile accettare o rifiutare i cookie non necessari.</li>
+        <li><strong>Impostazioni del browser:</strong> è possibile bloccare o eliminare i cookie dalle impostazioni del proprio browser (Chrome, Firefox, Safari, Edge).</li>
+      </ul>
+      <p className="mt-2">
+        La disabilitazione dei cookie tecnici potrebbe compromettere il corretto funzionamento del Sito.
+      </p>
+
+      <SectionTitle>5. Diritti dell'utente</SectionTitle>
+      <p>
+        L'utente può esercitare i diritti previsti dagli artt. 15-22 del GDPR scrivendo a <strong>info@iridia.tech</strong>.
+        Ha inoltre il diritto di proporre reclamo al Garante per la Protezione dei Dati Personali.
+      </p>
+    </PolicyOverlay>
+  );
+}
+
+// ─── TERMINI E CONDIZIONI ───────────────────────────────────
+function TermsConditions({ onClose }) {
+  return (
+    <PolicyOverlay title="Termini e Condizioni" onClose={onClose}>
+      <p>Ultimo aggiornamento: marzo 2026</p>
+      <p>
+        I presenti Termini e Condizioni regolano l'utilizzo del sito web <strong>www.iridia.tech</strong> (di seguito "Sito"),
+        di proprietà di Iridia S.R.L. L'accesso e l'utilizzo del Sito implicano l'accettazione dei presenti termini.
+      </p>
+
+      <SectionTitle>1. Titolare del Sito</SectionTitle>
+      <p>
+        <strong>Iridia S.R.L.</strong><br />
+        Via M. Cervantes de Saavedra 55/27, 80133 Napoli (NA)<br />
+        P.IVA: 10604401215<br />
+        PEC: iridiasrl@pec.it — Email: info@iridia.tech
+      </p>
+
+      <SectionTitle>2. Oggetto</SectionTitle>
+      <p>
+        Il Sito ha carattere informativo e promozionale. Presenta i servizi offerti da Iridia S.R.L. nell'ambito
+        dello sviluppo di applicazioni software e soluzioni di intelligenza artificiale per le imprese.
+      </p>
+
+      <SectionTitle>3. Proprietà intellettuale</SectionTitle>
+      <p>
+        Tutti i contenuti del Sito — inclusi testi, immagini, loghi, grafiche, icone, software e il marchio "Iridia" —
+        sono di proprietà esclusiva di Iridia S.R.L. o dei rispettivi titolari e sono protetti dalla normativa
+        italiana ed europea in materia di proprietà intellettuale e industriale.
+      </p>
+      <p>
+        È vietata la riproduzione, distribuzione, modifica o utilizzo dei contenuti senza autorizzazione scritta
+        del Titolare.
+      </p>
+
+      <SectionTitle>4. Limitazione di responsabilità</SectionTitle>
+      <ul className="list-disc pl-6 space-y-1">
+        <li>I contenuti del Sito sono forniti "così come sono" e a scopo puramente informativo.</li>
+        <li>Iridia S.R.L. non garantisce la completezza, accuratezza o aggiornamento delle informazioni pubblicate.</li>
+        <li>Iridia S.R.L. non è responsabile per eventuali danni diretti o indiretti derivanti dall'utilizzo del Sito o dall'impossibilità di accedervi.</li>
+        <li>Il Sito può contenere link a siti di terze parti. Iridia S.R.L. non è responsabile dei contenuti o delle politiche di privacy di tali siti.</li>
+      </ul>
+
+      <SectionTitle>5. Utilizzo del Sito</SectionTitle>
+      <p>L'utente si impegna a:</p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li>Utilizzare il Sito in conformità con la legge e i presenti Termini.</li>
+        <li>Non tentare di accedere in modo non autorizzato ai sistemi informatici del Sito.</li>
+        <li>Non utilizzare il Sito per scopi illeciti o per diffondere contenuti dannosi.</li>
+      </ul>
+
+      <SectionTitle>6. Servizi</SectionTitle>
+      <p>
+        Le informazioni relative ai servizi presentati sul Sito non costituiscono un'offerta al pubblico
+        ai sensi dell'art. 1336 c.c. Eventuali rapporti contrattuali saranno regolati da accordi specifici
+        sottoscritti tra le parti.
+      </p>
+
+      <SectionTitle>7. Modifiche</SectionTitle>
+      <p>
+        Iridia S.R.L. si riserva il diritto di modificare i presenti Termini in qualsiasi momento. Le modifiche
+        saranno efficaci dalla data di pubblicazione sul Sito. L'utilizzo continuato del Sito dopo la pubblicazione
+        delle modifiche costituisce accettazione dei nuovi termini.
+      </p>
+
+      <SectionTitle>8. Legge applicabile e foro competente</SectionTitle>
+      <p>
+        I presenti Termini sono regolati dalla legge italiana. Per qualsiasi controversia derivante dall'utilizzo
+        del Sito è competente in via esclusiva il Foro di Napoli, salvo diversa disposizione inderogabile di legge
+        a favore del consumatore.
+      </p>
+    </PolicyOverlay>
+  );
+}
+
+// ─── COOKIE BANNER ──────────────────────────────────────────
+function CookieBanner({ onOpenPolicy }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem("iridia_cookie_consent");
+    if (!consent) setVisible(true);
+  }, []);
+
+  const accept = () => {
+    localStorage.setItem("iridia_cookie_consent", "accepted");
+    setVisible(false);
+  };
+
+  const decline = () => {
+    localStorage.setItem("iridia_cookie_consent", "declined");
+    setVisible(false);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[90] p-4" style={{ background: C.navy + "f5", backdropFilter: "blur(12px)", borderTop: `1px solid ${C.darkBorder}` }}>
+      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <p className="text-sm flex-1 leading-relaxed" style={{ color: C.grayLight }}>
+          Questo sito utilizza cookie tecnici per garantire il corretto funzionamento.
+          Consulta la nostra{" "}
+          <button onClick={() => onOpenPolicy("cookie")} className="underline font-medium" style={{ color: C.lightBlue }}>
+            Cookie Policy
+          </button>{" "}
+          per maggiori informazioni.
+        </p>
+        <div className="flex gap-3 flex-shrink-0">
+          <button
+            onClick={decline}
+            className="px-5 py-2 rounded-lg text-sm font-medium border transition-colors duration-200 hover:opacity-80"
+            style={{ borderColor: C.darkBorder, color: C.gray, background: "transparent" }}
+          >
+            Rifiuta
+          </button>
+          <button
+            onClick={accept}
+            className="px-5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:opacity-90"
+            style={{ background: C.accent, color: "#fff" }}
+          >
+            Accetta
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── FOOTER ─────────────────────────────────────────────────
+function Footer({ onOpenPolicy }) {
+  return (
+    <footer className="py-10 px-6" style={{ background: C.dark, borderTop: `1px solid ${C.darkBorder}` }}>
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+          <button onClick={() => onOpenPolicy("privacy")} className="text-sm font-medium transition hover:opacity-80" style={{ color: C.gray }}>
+            Privacy Policy
+          </button>
+          <span className="hidden sm:inline" style={{ color: C.darkBorder }}>|</span>
+          <button onClick={() => onOpenPolicy("cookie")} className="text-sm font-medium transition hover:opacity-80" style={{ color: C.gray }}>
+            Cookie Policy
+          </button>
+          <span className="hidden sm:inline" style={{ color: C.darkBorder }}>|</span>
+          <button onClick={() => onOpenPolicy("terms")} className="text-sm font-medium transition hover:opacity-80" style={{ color: C.gray }}>
+            Termini e Condizioni
+          </button>
+        </div>
+        <p className="text-sm leading-relaxed text-center" style={{ color: C.gray + "88" }}>
+          Iridia S.R.L. — P.IVA 10604401215 — Via M. Cervantes de Saavedra 55/27, 80133 Napoli (NA)
+          <br />
+          PEC: iridiasrl@pec.it — info@iridia.tech
+        </p>
+        <p className="text-xs text-center mt-4" style={{ color: C.gray + "55" }}>
+          © {new Date().getFullYear()} Iridia S.R.L. — Tutti i diritti riservati.
+        </p>
+      </div>
     </footer>
   );
 }
 
 // ─── APP ────────────────────────────────────────────────────
 export default function IridiaLanding() {
+  const [openPolicy, setOpenPolicy] = useState(null);
+
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif", background: C.dark }}>
       <Navbar />
@@ -748,7 +1071,12 @@ export default function IridiaLanding() {
       <Team />
       <FAQ />
       <CTAFinal />
-      <Footer />
+      <Footer onOpenPolicy={setOpenPolicy} />
+      <CookieBanner onOpenPolicy={setOpenPolicy} />
+
+      {openPolicy === "privacy" && <PrivacyPolicy onClose={() => setOpenPolicy(null)} />}
+      {openPolicy === "cookie" && <CookiePolicy onClose={() => setOpenPolicy(null)} />}
+      {openPolicy === "terms" && <TermsConditions onClose={() => setOpenPolicy(null)} />}
     </div>
   );
 }
