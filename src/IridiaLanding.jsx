@@ -19,8 +19,8 @@ const C = {
   grayLight: "#c4d1e8",
 };
 
-// ─── Particle grid (circle dots with connections) ────────────
-function ParticleGrid() {
+// ─── Starfield — interstellar travel effect ──────────────────
+function Starfield() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -28,116 +28,119 @@ function ParticleGrid() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let animId;
-    let particles = [];
-    let mouse = { x: -1000, y: -1000 };
+    const STAR_COUNT = 250;
+    const stars = [];
+    let w, h;
+
+    const colors = [
+      [80, 176, 240],   // lightBlue
+      [64, 80, 240],    // indigo
+      [64, 144, 240],   // blue
+      [140, 200, 255],  // white-blue
+      [200, 220, 255],  // bright white
+      [100, 160, 240],  // mid-blue
+    ];
+
+    const createStar = (randomDepth) => {
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      return {
+        x: (Math.random() - 0.5) * 2000,
+        y: (Math.random() - 0.5) * 2000,
+        z: randomDepth ? Math.random() * 1500 : 1400 + Math.random() * 600,
+        baseSize: 0.2 + Math.random() * 2,
+        brightness: 0.3 + Math.random() * 0.7,
+        twinkleSpeed: 0.8 + Math.random() * 3,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        r: color[0], g: color[1], b: color[2],
+        speed: 0.15 + Math.random() * 0.5,
+      };
+    };
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      initParticles();
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = w * window.devicePixelRatio;
+      canvas.height = h * window.devicePixelRatio;
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
     };
 
-    const initParticles = () => {
-      particles = [];
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      const spacing = 50;
-      const cols = Math.ceil(w / spacing) + 1;
-      const rows = Math.ceil(h / spacing) + 1;
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          particles.push({
-            baseX: c * spacing + (r % 2 ? spacing / 2 : 0),
-            baseY: r * spacing,
-            x: c * spacing + (r % 2 ? spacing / 2 : 0),
-            y: r * spacing,
-            size: 1.5 + Math.random() * 1.5,
-            pulseSpeed: 0.5 + Math.random() * 1.5,
-            pulseOffset: Math.random() * Math.PI * 2,
-            driftX: (Math.random() - 0.5) * 0.3,
-            driftY: (Math.random() - 0.5) * 0.3,
-          });
-        }
-      }
-    };
-
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    };
-    const onLeave = () => { mouse.x = -1000; mouse.y = -1000; };
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push(createStar(true));
+    }
 
     const draw = (time) => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
       ctx.clearRect(0, 0, w, h);
       const t = time * 0.001;
+      const cx = w / 2;
+      const cy = h / 2;
+      const fov = 500;
 
-      // Update positions
-      for (const p of particles) {
-        p.x = p.baseX + Math.sin(t * p.driftX * 2 + p.pulseOffset) * 8;
-        p.y = p.baseY + Math.cos(t * p.driftY * 2 + p.pulseOffset) * 8;
-      }
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
 
-      // Draw connections
-      const connDist = 65;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < connDist) {
-            const alpha = (1 - dist / connDist) * 0.08;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(80, 176, 240, ${alpha})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
+        // Move star towards viewer
+        s.z -= s.speed * 0.8;
+
+        // Respawn when too close
+        if (s.z <= 1) {
+          Object.assign(s, createStar(false));
+          continue;
         }
-      }
 
-      // Draw circles and mouse interaction
-      const mouseRadius = 120;
-      for (const p of particles) {
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const mouseDist = Math.sqrt(dx * dx + dy * dy);
-        const mouseInfluence = mouseDist < mouseRadius ? 1 - mouseDist / mouseRadius : 0;
+        // 3D to 2D projection
+        const scale = fov / s.z;
+        const sx = cx + s.x * scale;
+        const sy = cy + s.y * scale;
 
-        const pulse = 0.3 + Math.sin(t * p.pulseSpeed + p.pulseOffset) * 0.2;
-        const alpha = Math.min(pulse + mouseInfluence * 0.6, 1);
-        const size = p.size + mouseInfluence * 3;
+        // Off screen — respawn
+        if (sx < -50 || sx > w + 50 || sy < -50 || sy > h + 50) {
+          Object.assign(s, createStar(false));
+          continue;
+        }
 
-        // Glow for mouse-nearby particles
-        if (mouseInfluence > 0.1) {
+        // Size grows as star approaches
+        const depthRatio = 1 - s.z / 1500;
+        const size = s.baseSize * (0.3 + depthRatio * 2.5);
+
+        // Opacity lifecycle: fade in → bright → fade out
+        let alpha = s.brightness;
+        if (depthRatio < 0.08) {
+          alpha *= depthRatio / 0.08;
+        } else if (depthRatio > 0.88) {
+          alpha *= (1 - depthRatio) / 0.12;
+        }
+        // Twinkle
+        alpha *= 0.65 + Math.sin(t * s.twinkleSpeed + s.twinkleOffset) * 0.35;
+        alpha = Math.max(0, Math.min(1, alpha));
+
+        if (alpha < 0.01) continue;
+
+        // Soft glow for brighter/closer stars
+        if (size > 1.8 && alpha > 0.25) {
+          const glowSize = size * 4;
+          const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, glowSize);
+          glow.addColorStop(0, `rgba(${s.r}, ${s.g}, ${s.b}, ${alpha * 0.2})`);
+          glow.addColorStop(0.4, `rgba(${s.r}, ${s.g}, ${s.b}, ${alpha * 0.06})`);
+          glow.addColorStop(1, `rgba(${s.r}, ${s.g}, ${s.b}, 0)`);
           ctx.beginPath();
-          ctx.arc(p.x, p.y, size + 4, 0, Math.PI * 2);
-          const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size + 4);
-          glow.addColorStop(0, `rgba(80, 176, 240, ${mouseInfluence * 0.3})`);
-          glow.addColorStop(1, "rgba(80, 176, 240, 0)");
+          ctx.arc(sx, sy, glowSize, 0, Math.PI * 2);
           ctx.fillStyle = glow;
           ctx.fill();
         }
 
-        // Draw connections to mouse
-        if (mouseInfluence > 0.2) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(80, 176, 240, ${mouseInfluence * 0.15})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-
-        // Circle
+        // Star body
         ctx.beginPath();
-        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(80, 176, 240, ${alpha})`;
+        ctx.arc(sx, sy, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${s.r}, ${s.g}, ${s.b}, ${alpha})`;
         ctx.fill();
+
+        // Hot bright center for close stars
+        if (size > 2.2 && alpha > 0.4) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, size * 0.3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(220, 235, 255, ${alpha * 0.6})`;
+          ctx.fill();
+        }
       }
 
       animId = requestAnimationFrame(draw);
@@ -146,22 +149,18 @@ function ParticleGrid() {
     resize();
     animId = requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
-    canvas.addEventListener("mousemove", onMove);
-    canvas.addEventListener("mouseleave", onLeave);
 
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
-      canvas.removeEventListener("mousemove", onMove);
-      canvas.removeEventListener("mouseleave", onLeave);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-auto"
-      style={{ opacity: 0.6 }}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.75 }}
     />
   );
 }
@@ -417,7 +416,7 @@ function Navbar() {
 function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
-      <ParticleGrid />
+      <Starfield />
       <GradientBlob className="absolute w-[900px] h-[900px] -top-48 -right-48 opacity-60 pointer-events-none" />
       <GradientBlob className="absolute w-[600px] h-[600px] -bottom-32 -left-32 opacity-40 pointer-events-none" />
 
