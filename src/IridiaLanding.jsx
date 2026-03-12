@@ -210,32 +210,34 @@ function FloatingCircles({ count = 12, className = "" }) {
 }
 
 // ─── Animated gradient blob (SVG, no deps) ──────────────────
-// ─── Nebula — soft gaseous cloud ─────────────────────────────
-let nebulaIdCounter = 0;
-function Nebula({ className, color1 = C.indigo, color2 = C.lightBlue, opacity1 = 0.15, opacity2 = 0.04 }) {
-  const id = useRef(`neb${nebulaIdCounter++}`).current;
+// ─── Nebula — CSS gaseous clouds (cross-browser) ─────────────
+function Nebula({ className, color1 = C.indigo, color2 = C.lightBlue }) {
   return (
-    <svg
-      viewBox="0 0 600 600"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ filter: "blur(60px)" }}
-    >
-      <defs>
-        <radialGradient id={`${id}g`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={color1} stopOpacity={opacity1} />
-          <stop offset="40%" stopColor={color2} stopOpacity={opacity1 * 0.5} />
-          <stop offset="70%" stopColor={color1} stopOpacity={opacity2} />
-          <stop offset="100%" stopColor={color2} stopOpacity="0" />
-        </radialGradient>
-        <filter id={`${id}t`}>
-          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed={Math.floor(Math.random() * 100)} />
-          <feDisplacementMap in="SourceGraphic" scale="80" />
-        </filter>
-      </defs>
-      <ellipse cx="300" cy="300" rx="280" ry="240" fill={`url(#${id}g)`} filter={`url(#${id}t)`} />
-      <ellipse cx="320" cy="280" rx="200" ry="180" fill={`url(#${id}g)`} opacity="0.5" />
-    </svg>
+    <div className={`${className}`} style={{ filter: "blur(80px)", WebkitFilter: "blur(80px)" }}>
+      {/* Core cloud */}
+      <div
+        className="absolute inset-[10%] rounded-full"
+        style={{
+          background: `radial-gradient(ellipse at 40% 45%, ${color1}55, ${color2}22 50%, transparent 75%)`,
+        }}
+      />
+      {/* Secondary wisp */}
+      <div
+        className="absolute inset-[5%] rounded-full"
+        style={{
+          background: `radial-gradient(ellipse at 60% 55%, ${color2}33, ${color1}15 45%, transparent 70%)`,
+          transform: "rotate(25deg) scale(1.1, 0.85)",
+        }}
+      />
+      {/* Outer haze */}
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `radial-gradient(ellipse at 50% 50%, ${color1}20, transparent 65%)`,
+          transform: "scale(1.15, 0.95)",
+        }}
+      />
+    </div>
   );
 }
 
@@ -428,8 +430,8 @@ function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: C.dark }}>
       <Starfield />
-      <Nebula className="absolute w-[1100px] h-[1100px] -top-64 -right-64 opacity-70 pointer-events-none" color1={C.indigo} color2={C.blue} opacity1={0.12} opacity2={0.03} />
-      <Nebula className="absolute w-[800px] h-[800px] -bottom-48 -left-48 opacity-50 pointer-events-none" color1={C.accent} color2={C.lightBlue} opacity1={0.10} opacity2={0.02} />
+      <Nebula className="absolute w-[1200px] h-[1000px] -top-72 -right-[28rem] pointer-events-none" color1={C.indigo} color2={C.blue} />
+      <Nebula className="absolute w-[1200px] h-[1000px] -bottom-72 -left-[28rem] pointer-events-none" color1={C.accent} color2={C.lightBlue} />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         {/* Logo */}
@@ -483,7 +485,7 @@ function Hero() {
 const pillars = [
   {
     icon: (
-      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke={C.lightBlue} strokeWidth="1.5">
+      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" strokeWidth="1.5">
         <rect x="4" y="4" width="16" height="16" rx="3" />
         <path d="M9 9l2 2 4-4" />
         <path d="M4 14h16" />
@@ -494,7 +496,7 @@ const pillars = [
   },
   {
     icon: (
-      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke={C.lightBlue} strokeWidth="1.5">
+      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" strokeWidth="1.5">
         <circle cx="12" cy="12" r="3" />
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
       </svg>
@@ -504,7 +506,7 @@ const pillars = [
   },
   {
     icon: (
-      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke={C.lightBlue} strokeWidth="1.5">
+      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" strokeWidth="1.5">
         <path d="M8 12h8M12 8v8" />
         <rect x="2" y="6" width="8" height="12" rx="2" />
         <rect x="14" y="6" width="8" height="12" rx="2" />
@@ -609,8 +611,8 @@ function Problems() {
                     }}
                   >
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#ef4444" }} />
-                      <span className="text-sm font-medium uppercase tracking-wider" style={{ color: "#ef4444" }}>Problema</span>
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#f59e0b" }} />
+                      <span className="text-sm font-medium uppercase tracking-wider" style={{ color: "#f59e0b" }}>Problema</span>
                     </div>
                     <p className="text-lg leading-relaxed" style={{ color: C.white }}>{p.problem}</p>
                     <p className="mt-4 text-sm" style={{ color: C.gray }}>Clicca per la soluzione →</p>
@@ -714,7 +716,8 @@ function ProcessStep({ step, index, total }) {
 
 function Process() {
   return (
-    <section id="processo" className="py-24 px-6 relative" style={{ background: C.dark }}>
+    <section id="processo" className="py-24 px-6 relative overflow-hidden" style={{ background: C.dark }}>
+      <Nebula className="absolute w-[900px] h-[800px] -top-64 -right-[20rem] pointer-events-none opacity-60" color1={C.indigo} color2={C.blue} />
       <FloatingCircles count={6} />
       <div className="max-w-5xl mx-auto relative z-10">
         <FadeSection variant="blur">
@@ -978,8 +981,9 @@ function Team() {
 // ─── CTA FINALE ─────────────────────────────────────────────
 function CTAFinal() {
   return (
-    <section id="contatti" className="py-24 px-6 relative" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
-      <FloatingCircles count={10} />
+    <section id="contatti" className="py-24 px-6 relative overflow-hidden" style={{ background: `linear-gradient(180deg, ${C.navy}, ${C.dark})` }}>
+      <Starfield />
+      <Nebula className="absolute w-[1000px] h-[800px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-50" color1={C.accent} color2={C.lightBlue} />
       <div className="max-w-3xl mx-auto text-center relative z-10">
         <FadeSection variant="scale">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ color: C.white }}>
